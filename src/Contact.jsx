@@ -308,7 +308,8 @@ const Contact = () => {
                   </div>
                 </div>
 
-                {/* Newsletter Signup */}
+                {/* Commented out for the time being because I don't have a newsletter */}
+                {/* Newsletter Signup 
                 <div
                   className={`mt-8 p-6 rounded-lg ${
                     darkMode ? 'bg-zinc-900/90' : 'bg-white/90'
@@ -349,7 +350,7 @@ const Contact = () => {
                       </span>
                     </button>
                   </form>
-                </div>
+                </div> */}
 
               </div>
             </div>
