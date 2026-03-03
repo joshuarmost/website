@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Instagram, Mail, Menu, X, ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { Camera, Instagram, Mail, Menu, X, ChevronLeft, ChevronRight, Moon, Sun, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
@@ -235,7 +235,7 @@ const Home = () => {
       <footer className={`py-12 px-4 ${darkMode ? 'bg-black border-t border-zinc-900' : 'bg-white border-t border-zinc-900'}`}>
         <div className="max-w-7xl mx-auto text-center space-y-4">
 
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-4">
             <a 
               href="https://www.instagram.com/joshuarmost"
               target="_blank"
@@ -243,6 +243,14 @@ const Home = () => {
               className="transition-colors hover:text-zinc-900"
             >
               <Instagram className="w-6 h-6" />
+            </a>
+            <a 
+              href="https://github.com/joshuarmost"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-zinc-900"
+            >
+              <Github className="w-6 h-6" />
             </a>
           </div>
           <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'}`}>

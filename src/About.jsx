@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Instagram, Mail, Moon, Sun, Menu, X } from 'lucide-react';
+import { Instagram, Mail, Moon, Sun, Menu, X, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
@@ -166,6 +166,18 @@ const About = () => {
                       @joshuarmost
                     </a>
                   </div>
+
+                  <div className="flex items-center space-x-3">
+                    <Github className={`w-6 h-6 ${darkMode ? 'text-gray-300' : 'text-gray-900'}`} />
+                    <a 
+                      href="https://github.com/joshuarmost" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-lg hover:text-zinc-900"
+                    >
+                      joshuarmost
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -176,7 +188,7 @@ const About = () => {
         {/* Footer */}
         <footer className={`py-12 px-4 ${darkMode ? 'bg-black/80 border-t border-zinc-900' : 'bg-white/80 border-t border-zinc-900'}`}>
           <div className="max-w-7xl mx-auto text-center space-y-4">
-            <div className="flex justify-center">
+            <div className="flex justify-center space-x-4">
               <a
                 href="https://www.instagram.com/joshuarmost"
                 target="_blank"
@@ -184,6 +196,14 @@ const About = () => {
                 className="transition-colors hover:text-zinc-900"
               >
                 <Instagram className="w-6 h-6" />
+              </a>
+              <a
+                href="https://github.com/joshuarmost"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-zinc-900"
+              >
+                <Github className="w-6 h-6" />
               </a>
             </div>
             <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'}`}>
