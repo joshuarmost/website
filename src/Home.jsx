@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Instagram, Mail, Menu, X, ChevronLeft, ChevronRight, Moon, Sun, Github } from 'lucide-react';
+import { Camera, Instagram, Mail, Menu, X, ChevronLeft, ChevronRight, Moon, Sun, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
@@ -251,6 +251,14 @@ const Home = () => {
               className="transition-colors hover:text-zinc-900"
             >
               <Github className="w-6 h-6" />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/joshua-most-947616307/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-zinc-900"
+            >
+              <Linkedin className="w-6 h-6" />
             </a>
           </div>
           <p className={`text-sm ${darkMode ? 'text-white' : 'text-black'}`}>

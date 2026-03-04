@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Instagram, Mail, Moon, Sun, Send, Menu, X, Github } from 'lucide-react';
+import { Instagram, Mail, Moon, Sun, Send, Menu, X, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
@@ -322,6 +322,22 @@ const Contact = () => {
                       joshuarmost
                     </a>
                   </div>
+
+                  <div className="flex items-center space-x-3">
+                    <Linkedin
+                      className={`w-6 h-6 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-900'
+                      }`}
+                    />
+                    <a
+                      href="https://www.linkedin.com/in/joshua-most-947616307/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg hover:text-zinc-900"
+                    >
+                      Joshua Most
+                    </a>
+                  </div>
                 </div>
 
                 {/* Commented out for the time being because I don't have a newsletter */}
@@ -398,6 +414,14 @@ const Contact = () => {
                 className="hover:text-zinc-900"
               >
                 <Github className="w-6 h-6" />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/joshua-most-947616307/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-zinc-900"
+              >
+                <Linkedin className="w-6 h-6" />
               </a>
             </div>
 
