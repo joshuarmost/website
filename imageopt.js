@@ -22,7 +22,7 @@ async function optimizeImages() {
     try {
       const ext = path.extname(file).toLowerCase();
       const baseName = path.basename(file, ext);
-      const outputPath = path.join(OUTPUT_DIR, `${baseName}.webp`);
+      const outputPath = path.join(OUTPUT_DIR, `${baseName}.avif`);
 
       let image = sharp(file);
 
@@ -31,7 +31,7 @@ async function optimizeImages() {
         image = image.resize({ width: MAX_WIDTH });
       }
 
-      await image.webp({ quality: QUALITY }).toFile(outputPath);
+      await image.avif({ quality: QUALITY }).toFile(outputPath);
 
       console.log(`Optimized: ${outputPath}`);
     } catch (e) {

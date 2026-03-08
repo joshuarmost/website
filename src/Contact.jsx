@@ -5,7 +5,7 @@ import { useDarkMode } from './DarkModeContext';
 
 // Automatically use correct API URL for dev vs prod
 const API_BASE =
-  process.env.NODE_ENV === "production"
+  import.meta.env.PROD
     ? ""
     : "http://localhost:5000";
 
@@ -23,8 +23,9 @@ const Contact = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  // Newsletter state (kept for future use)
+  // const [newsletterEmail, setNewsletterEmail] = useState('');
+  // const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -58,26 +59,27 @@ const Contact = () => {
     }
   };
 
-  const handleNewsletterSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`${API_BASE}/api/newsletter/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newsletterEmail })
-      });
+  // Newsletter submit handler (kept for future use)
+  // const handleNewsletterSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await fetch(`${API_BASE}/api/newsletter/signup`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ email: newsletterEmail })
+  //     });
 
-      if (!res.ok) throw new Error('Failed to sign up');
+  //     if (!res.ok) throw new Error('Failed to sign up');
 
-      setNewsletterSubmitted(true);
-      setTimeout(() => {
-        setNewsletterEmail('');
-        setNewsletterSubmitted(false);
-      }, 2000);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  //     setNewsletterSubmitted(true);
+  //     setTimeout(() => {
+  //       setNewsletterEmail('');
+  //       setNewsletterSubmitted(false);
+  //     }, 2000);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   return (
     <div
@@ -85,7 +87,7 @@ const Contact = () => {
         darkMode ? 'text-white' : 'text-black'
       }`}
       style={{
-        backgroundImage: `url(/images/contact.webp)`,
+        backgroundImage: `url(/images/contact.avif)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

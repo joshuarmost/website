@@ -12,7 +12,7 @@ const Home = () => {
 
   const images = Array.from({ length: 15 }, (_, i) => ({
     id: i + 1,
-    src: `/images/${i + 1}.webp`,
+    src: `/images/${i + 1}.avif`,
     alt: `Project ${i + 1}`
   }));
 
@@ -181,7 +181,7 @@ const Home = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(/images/home.webp)`,
+            backgroundImage: `url(/images/home.avif)`,
             filter: 'brightness(0.7)'
           }}
         />

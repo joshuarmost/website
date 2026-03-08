@@ -18,7 +18,7 @@ const About = () => {
     <div
       className={`min-h-screen font-sans relative ${darkMode ? 'text-white' : 'text-black'}`}
       style={{
-        backgroundImage: `url(/images/about.webp)`,
+        backgroundImage: `url(/images/about.avif)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -127,7 +127,7 @@ const About = () => {
               {/* Image */}
               <div className="order-2 lg:order-1 max-w-md mx-auto animate-fade-in">
                 <img 
-                  src={`/images/profile.webp`}
+                  src={`/images/profile.avif`}
                   alt="Joshua Most"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
