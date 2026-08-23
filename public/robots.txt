@@ -1,0 +1,38 @@
+# robots.txt — allow Internet Archive, block Google and common AI crawlers
+# Archive.org crawlers
+User-agent: ia_archiver
+Allow: /
+
+User-agent: archive.org_bot
+Allow: /
+
+# Block known search engines and AI crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: OpenAI
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+# Default: do not allow other agents
+User-agent: *
+Disallow: /
+
+# Note: Robots.txt is advisory. For stricter enforcement, implement server-side UA checks.
