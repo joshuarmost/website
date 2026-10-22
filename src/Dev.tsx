@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Instagram, Moon, Sun, Menu, X, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 
+interface DevPost {
+  id: number;
+  title: string;
+  date: string;
+  content: string;
+}
+
 const Dev = () => {
   const { darkMode, setDarkMode } = useDarkMode();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<DevPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Scroll detection
@@ -23,7 +30,7 @@ const Dev = () => {
   useEffect(() => {
     fetch('/api/devPosts') // backend route
       .then(res => res.json())
-      .then(data => setPosts(data))
+      .then((data: DevPost[]) => setPosts(data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);

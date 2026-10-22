@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DarkModeProvider } from './DarkModeContext';
-import ScrollToTop from './ScrollToTop'; // <-- new import
+import ScrollToTop from './ScrollToTop';
 import './index.css';
-import Home from './Home.jsx';
-import About from './About.jsx';
-import Contact from './Contact.jsx';
-import Dev from './Dev.jsx';
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
+import Dev from './Dev';
 
 function App() {
   return (

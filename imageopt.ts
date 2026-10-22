@@ -1,5 +1,4 @@
-// run with node imageopt.js
-// imageopt.js
+// Run with: npm run start:images
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';

@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { Instagram, Mail, Moon, Sun, Send, Menu, X, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
-// Automatically use correct API URL for dev vs prod
-const API_BASE =
-  import.meta.env.PROD
-    ? ""
-    : "http://localhost:5000";
+interface ContactForm {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+const contactFields: Array<keyof Pick<ContactForm, 'name' | 'email' | 'subject'>> = [
+  'name',
+  'email',
+  'subject',
+];
 
 const Contact = () => {
   const { darkMode, setDarkMode } = useDarkMode();
@@ -15,7 +22,7 @@ const Contact = () => {
   const [animate, setAnimate] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactForm>({
     name: '',
     email: '',
     subject: '',
@@ -35,13 +42,15 @@ const Contact = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const field = e.target.name as keyof ContactForm;
+    setFormData((currentFormData) => ({ ...currentFormData, [field]: e.target.value }));
+  };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_BASE}/api/contact`, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -210,7 +219,7 @@ const Contact = () => {
                 } ${animate ? 'animate-fade-in-delay' : ''}`}
               >
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {['name', 'email', 'subject'].map((field) => (
+                  {contactFields.map((field) => (
                     <div key={field}>
                       <label className="block text-sm font-medium mb-2 capitalize">
                         {field}
@@ -237,7 +246,7 @@ const Contact = () => {
                     </label>
                     <textarea
                       name="message"
-                      rows="5"
+                      rows={5}
                       value={formData.message}
                       onChange={handleChange}
                       required

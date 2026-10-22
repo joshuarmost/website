@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Camera, Instagram, Mail, Menu, X, ChevronLeft, ChevronRight, Moon, Sun, Github, Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
+
+interface PortfolioImage {
+  id: number;
+  src: string;
+  alt: string;
+}
 
 const Home = () => {
   const { darkMode, setDarkMode } = useDarkMode();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const images = Array.from({ length: 15 }, (_, i) => ({
+  const images: PortfolioImage[] = Array.from({ length: 15 }, (_, i) => ({
     id: i + 1,
     src: `/images/${i + 1}.avif`,
     alt: `Project ${i + 1}`
@@ -24,7 +30,7 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const openLightbox = (index) => {
+  const openLightbox = (index: number) => {
     setCurrentImageIndex(index);
     setSelectedImage(images[index]);
   };
@@ -46,7 +52,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (!selectedImage) return;
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'ArrowLeft') prevImage();

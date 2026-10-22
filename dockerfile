@@ -1,45 +1,40 @@
 # Build stage
-FROM node:20 AS build
+FROM node:20-bookworm-slim AS build
 
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm install
+# Install the exact locked dependencies.
+RUN npm ci
 
-# Copy all necessary files for Vite build
-COPY index.html ./
-COPY vite.config.js ./
-COPY postcss.config.js ./
-COPY tailwind.config.js ./
+# Copy only the source required to build the application.
+COPY index.html vite.config.ts postcss.config.js tailwind.config.js ./
+COPY tsconfig.json tsconfig.server.json ./
 COPY src ./src
 COPY public ./public
 COPY devPostsMd ./devPostsMd
+COPY server.ts ./
 
-# Build the React application with Vite
+# Build the client and production server.
 RUN npm run build
 
 # Production stage
-FROM node:20-slim
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install production dependencies only
-RUN npm install --production
+# Keep the runtime image free from build tooling.
+RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy built React app from build stage (Vite builds to 'build' directory based on your config)
+# Copy only runtime assets and use the unprivileged Node user.
 COPY --from=build /app/build ./build
-
-# Copy markdown posts directory
 COPY devPostsMd ./devPostsMd
-
-# Copy server file
-COPY server.js ./
+COPY --from=build /app/.server-build ./.server-build
 
 # Expose port
 EXPOSE 5555
@@ -47,5 +42,7 @@ EXPOSE 5555
 # Set environment to production
 ENV NODE_ENV=production
 
+USER node
+
 # Start the server
-CMD ["node", "server.js"]
+CMD ["node", ".server-build/server.js"]

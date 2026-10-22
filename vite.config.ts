@@ -13,6 +13,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'build', // <-- matches your Express server.js
+    outDir: 'build', // Matches the Express server build directory.
   },
 });
