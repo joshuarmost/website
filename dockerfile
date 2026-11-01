@@ -1,7 +1,10 @@
 # Build stage
-FROM node:20-bookworm-slim AS build
+FROM node:26.13.0-bookworm-slim AS build
 
 WORKDIR /app
+
+# Keep the package manager on the current supported release as well.
+RUN npm install --global npm@12.2.1
 
 # Copy package files
 COPY package.json package-lock.json ./
@@ -21,9 +24,11 @@ COPY server.ts ./
 RUN npm run build
 
 # Production stage
-FROM node:20-bookworm-slim
+FROM node:26.13.0-bookworm-slim
 
 WORKDIR /app
+
+RUN npm install --global npm@12.2.1
 
 # Copy package files
 COPY package.json package-lock.json ./
