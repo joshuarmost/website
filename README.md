@@ -7,7 +7,7 @@ This repository contains the **source code** for my personal photography website
 * Home, About, Contact, and Dev pages
 * Dark mode toggle
 * Dev journal powered by Markdown files
-* Contact form and newsletter signup via SendGrid
+* Contact form email delivery via SMTP
 
 ## Installation
 
@@ -36,6 +36,19 @@ Super basic setup steps:
    ```bash
    npm run build
    ```
+
+## Container deployment
+
+Run the production container with a read-only filesystem, dropped capabilities,
+and no privilege escalation when the hosting platform supports these options:
+
+```bash
+docker run --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+   -p 5555:5555 --env-file .env your-image:tag
+```
+
+Newsletter signup is not included in the deployed API. Add verified double
+opt-in and bot protection before reintroducing it.
 
 ## License
 

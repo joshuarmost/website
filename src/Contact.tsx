@@ -1,5 +1,5 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
-import { Instagram, Mail, Moon, Sun, Send, Menu, X, Github, Linkedin } from 'lucide-react';
+import { Instagram, Mail, Moon, Sun, Send, Menu, X, Github, Linkedin, LoaderCircle, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from './DarkModeContext';
 
@@ -8,6 +8,7 @@ interface ContactForm {
   email: string;
   subject: string;
   message: string;
+  website: string;
 }
 
 const contactFields: Array<keyof Pick<ContactForm, 'name' | 'email' | 'subject'>> = [
@@ -26,9 +27,11 @@ const Contact = () => {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
+    website: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Newsletter state (kept for future use)
   // const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -49,6 +52,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -60,11 +64,13 @@ const Contact = () => {
 
       setSubmitted(true);
       setTimeout(() => {
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', subject: '', message: '', website: '' });
         setSubmitted(false);
       }, 2000);
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,6 +225,16 @@ const Contact = () => {
                 } ${animate ? 'animate-fade-in-delay' : ''}`}
               >
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute left-[-10000px] h-px w-px overflow-hidden"
+                  />
                   {contactFields.map((field) => (
                     <div key={field}>
                       <label className="block text-sm font-medium mb-2 capitalize">
@@ -261,14 +277,22 @@ const Contact = () => {
 
                   <button
                     type="submit"
+                    disabled={isSubmitting || submitted}
+                    aria-busy={isSubmitting}
                     className={`w-full flex items-center justify-center space-x-2 px-6 py-4 rounded-lg font-medium ${
                       darkMode
-                        ? 'bg-white text-black hover:bg-gray-200'
-                        : 'bg-black text-white hover:bg-zinc-900'
+                        ? 'bg-white text-black hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-70'
+                        : 'bg-black text-white hover:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-70'
                     }`}
                   >
-                    <Send className="w-5 h-5" />
-                    <span>{submitted ? 'Sent!' : 'Send Message'}</span>
+                    {isSubmitting ? (
+                      <LoaderCircle className="w-5 h-5 animate-spin" aria-hidden="true" />
+                    ) : submitted ? (
+                      <Check className="w-5 h-5 animate-success-check" aria-hidden="true" />
+                    ) : (
+                      <Send className="w-5 h-5" aria-hidden="true" />
+                    )}
+                    <span>{isSubmitting ? 'Sending...' : submitted ? 'Sent!' : 'Send Message'}</span>
                   </button>
                 </form>
               </div>

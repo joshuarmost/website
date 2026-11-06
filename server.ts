@@ -8,7 +8,6 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
-import sgMail from '@sendgrid/mail';
 import type { NextFunction, Request, Response } from 'express';
 
 interface DevPost {
@@ -23,10 +22,7 @@ interface ContactRequest {
   email?: string;
   subject?: string;
   message?: string;
-}
-
-interface NewsletterRequest {
-  email?: string;
+  website?: string;
 }
 
 dotenv.config();
@@ -40,10 +36,6 @@ const allowedOrigins = new Set(
 
 if (isProduction && allowedOrigins.size === 0) {
   throw new Error('ALLOWED_ORIGINS must contain the public site origin in production.');
-}
-
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 }
 
 const app = express();
@@ -65,24 +57,25 @@ const apiLimiter = rateLimit({
 });
 
 const contactLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 5,
+  windowMs: 10 * 60 * 1000,
+  limit: 1,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   message: { error: 'Too many requests. Please try again later.' },
 });
 
-const newsletterLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  limit: 3,
+const contactEmailLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 1,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
+  keyGenerator: (req) => getEmail(req.body?.email) ?? req.ip ?? 'unknown',
   message: { error: 'Too many requests. Please try again later.' },
 });
 
 const requireAllowedOrigin = (req: Request, res: Response, next: NextFunction) => {
   const origin = req.get('origin');
-  if (origin && !allowedOrigins.has(origin)) {
+  if (!origin || !allowedOrigins.has(origin)) {
     return res.status(403).json({ error: 'Origin is not allowed.' });
   }
   next();
@@ -224,7 +217,11 @@ apiRouter.get('/devPosts', (req, res) => {
   res.json(posts);
 });
 
-apiRouter.post('/contact', requireAllowedOrigin, contactLimiter, async (req: Request<unknown, unknown, ContactRequest>, res, next) => {
+apiRouter.post('/contact', requireAllowedOrigin, contactLimiter, contactEmailLimiter, async (req: Request<unknown, unknown, ContactRequest>, res, next) => {
+  if (req.body.website) {
+    return res.status(200).json({ message: 'Email sent successfully' });
+  }
+
   const name = getText(req.body.name, 100);
   const email = getEmail(req.body.email);
   const subject = getText(req.body.subject, 160);
@@ -261,31 +258,6 @@ apiRouter.post('/contact', requireAllowedOrigin, contactLimiter, async (req: Req
     });
 
     res.status(200).json({ message: 'Email sent successfully' });
-  } catch (err) {
-    next(err);
-  }
-});
-
-apiRouter.post('/newsletter/signup', requireAllowedOrigin, newsletterLimiter, async (req: Request<unknown, unknown, NewsletterRequest>, res, next) => {
-  const email = getEmail(req.body.email);
-  if (!email) return res.status(400).json({ error: 'Please provide a valid email address.' });
-
-  const sender = process.env.SENDGRID_SENDER;
-  if (!process.env.SENDGRID_API_KEY || !sender) {
-    console.error('Newsletter mail service is not configured.');
-    return res.status(503).json({ error: 'Newsletter service is temporarily unavailable.' });
-  }
-
-  try {
-    await sgMail.send({
-      to: email,
-      from: sender,
-      subject: 'Thanks for subscribing!',
-      text: 'Welcome to the newsletter!',
-      html: '<strong>Welcome to the newsletter!</strong>',
-    });
-
-    res.status(200).json({ message: 'Thank you for subscribing!' });
   } catch (err) {
     next(err);
   }
