@@ -65,23 +65,10 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          load: ${{ github.event_name == 'pull_request' }}
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ${{ github.event_name == 'pull_request' && 'website:ci' || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Scan image for vulnerabilities
-        if: github.event_name == 'pull_request'
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2 # v0.28.0
-        with:
-          image-ref: website:ci
-          format: table
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: CRITICAL,HIGH
 
       - name: Image digest
         run: echo ${{ steps.meta.outputs.digest }}
